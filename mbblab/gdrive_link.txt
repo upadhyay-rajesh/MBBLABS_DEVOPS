@@ -1,0 +1,20 @@
+
+
+https://drive.google.com/drive/u/0/folders/1VPPyOLqLgvQcaSIFDb_urCKXLrbQieGr
+
+
+https://github.com/upadhyay-rajesh/MBBLABS_DEVOPS.git
+
+
+rajeshvm.southindia.cloudapp.azure.com
+
+
+chmod 400 mykey.pem
+
+ssh -i mykey.pem azureuser@<public-ip-of-vm>
+
+
+sudo apt update
+sudo apt install freerdp2-x11 -y
+
+xfreerdp /u:rajesh /p:- /v:rajeshvm.southindia.cloudapp.azure.com /f /cert:ignore
