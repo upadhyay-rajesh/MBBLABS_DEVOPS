@@ -18,3 +18,7 @@ sudo apt update
 sudo apt install freerdp2-x11 -y
 
 xfreerdp /u:rajesh /p:- /v:rajeshvm.southindia.cloudapp.azure.com /f /cert:ignore
+
+docker network create mysune1network
+docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=rajesh -e MYSQL_DATABASE=mbblab -p 3306:3306 --network mbblabnetwork -d mysql
+
