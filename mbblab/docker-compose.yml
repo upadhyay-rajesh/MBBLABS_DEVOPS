@@ -1,0 +1,61 @@
+ersion: "3"      docker run --name mysql-container --network mynetwork -p 3306:3306 -d mysql
+services:
+  # MySQL Config for order service
+  mysql-order:
+    container_name: mysql-order
+    image: mysql:latest
+    networks:
+      - db_net
+      - shared_net
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: order_service
+      MYSQL_USER: ibatulanand
+      MYSQL_PASSWORD: password
+    volumes:
+      - ./mysql_order:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    restart: always
+  order-service:
+    container_name: order-service
+    image: ibatulanandjp/order-service:latest
+	networks:
+      - db_net
+      - shared_net
+    pull_policy: always
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-order:3306/order_service?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=ibatulanand
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SERVER_PORT=8080
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+      - SPRING_KAFKA_BOOTSTRAPSERVERS=broker:29092
+    depends_on:
+      - mysql-order
+     
+
+  # Inventory Service Config
+  inventory-service:
+    container_name: inventory-service
+    image: ibatulanandjp/inventory-service:latest
+	networks:
+      - db_net
+      - shared_net
+    pull_policy: always
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-inventory:3306/inventory_service?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=ibatulanand
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SERVER_PORT=8080
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+    depends_on:
+      - mysql-order
+      
+  networks:
+  app_net:
+  db_net:
+  shared_net:
