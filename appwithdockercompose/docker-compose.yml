@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql
+    container_name: mysql-afternoon-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rajesh
+      MYSQL_DATABASE: mbblab_afternoon
+    ports:
+      - "3307:3307"
+    networks:
+      - spring-net
+
+  app1:
+    container_name: app1_container
+    image: app1:latest
+    restart: always
+    ports:
+      - "12001:12001"
+    depends_on:
+      - mysql
+    networks:
+      - spring-net
+
+  app2:
+    container_name: app2_container
+    image: app2:latest
+    restart: always
+    ports:
+      - "12002:12002"
+    depends_on:
+      - mysql
+    networks:
+      - spring-net
+
+networks:
+  spring-net:
+    
